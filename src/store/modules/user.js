@@ -1,4 +1,4 @@
-import { loginByUsername, logout, getUserInfo } from '@/api/login'
+import { loginByUsername, logout, getAdminInfo } from '@/api/login'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 
 const user = {
@@ -53,9 +53,13 @@ const user = {
       const username = userInfo.username.trim()
       return new Promise((resolve, reject) => {
         loginByUsername(username, userInfo.password).then(response => {
-          const token = response.data.data
+          const token = "eca6948a-fcb3-4e1a-bf9d-ab4a0be907cc"
           commit('SET_TOKEN', token)
           setToken(token)
+          const data = response.data.data
+          console.log('data',data)
+          commit('SET_NAME', data.username)
+          commit('SET_AVATAR', data.avatar)
           resolve()
         }).catch(error => {
           reject(error)
@@ -66,19 +70,21 @@ const user = {
     // 获取用户信息
     GetUserInfo({ commit, state }) {
       return new Promise((resolve, reject) => {
-        getUserInfo(state.token).then(response => {
+        getAdminInfo(state.token).then(response => {
           const data = response.data.data
-
-          if (data.perms && data.perms.length > 0) { // 验证返回的perms是否是一个非空数组
+          console.log('data',data)
+          commit('SET_NAME', data.username)
+          commit('SET_AVATAR', data.avatar)
+          /*if (data.perms && data.perms.length > 0) { // 验证返回的perms是否是一个非空数组
             commit('SET_PERMS', data.perms)
           } else {
             reject('getInfo: perms must be a non-null array !')
-          }
+          }*/
 
-          commit('SET_ROLES', data.roles)
+          /*commit('SET_ROLES', data.roles)
           commit('SET_NAME', data.name)
           commit('SET_AVATAR', data.avatar)
-          commit('SET_INTRODUCTION', data.introduction)
+          commit('SET_INTRODUCTION', data.introduction)*/
           resolve(response)
         }).catch(error => {
           reject(error)
@@ -103,15 +109,11 @@ const user = {
     // 登出
     LogOut({ commit, state }) {
       return new Promise((resolve, reject) => {
-        logout(state.token).then(() => {
-          commit('SET_TOKEN', '')
-          commit('SET_ROLES', [])
-          commit('SET_PERMS', [])
-          removeToken()
-          resolve()
-        }).catch(error => {
-          reject(error)
-        })
+        commit('SET_TOKEN', '')
+        commit('SET_ROLES', [])
+        commit('SET_PERMS', [])
+        removeToken()
+        resolve()
       })
     },
 

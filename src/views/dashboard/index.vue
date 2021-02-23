@@ -67,12 +67,16 @@ export default {
     }
   },
   created() {
-    info().then(response => {
-      this.userTotal = response.data.data.userTotal
-      this.goodsTotal = response.data.data.goodsTotal
-      this.productTotal = response.data.data.productTotal
-      this.orderTotal = response.data.data.orderTotal
-    })
+    // info().then(response => {
+    //   this.userTotal = response.data.data.userTotal
+    //   this.goodsTotal = response.data.data.goodsTotal
+    //   this.productTotal = response.data.data.productTotal
+    //   this.orderTotal = response.data.data.orderTotal
+    // })
+    this.userTotal = 424
+    this.goodsTotal = 424
+    this.productTotal = 424
+    this.orderTotal = 424
   },
   methods: {
     handleSetLineChartData(type) {
