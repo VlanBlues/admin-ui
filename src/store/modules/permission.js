@@ -54,11 +54,12 @@ const permission = {
       return new Promise(resolve => {
         const { perms } = data
         let accessedRouters
-        if (perms.includes('*')) {
+        /*if (perms.includes('*')) {
           accessedRouters = asyncRouterMap
         } else {
           accessedRouters = filterAsyncRouter(asyncRouterMap, perms)
-        }
+        }*/
+        accessedRouters = asyncRouterMap
         commit('SET_ROUTERS', accessedRouters)
         resolve()
       })

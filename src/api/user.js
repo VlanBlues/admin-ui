@@ -8,11 +8,11 @@ export function fetchList(query) {
   })
 }
 
-export function approveAgency(data) {
+export function deleteUser(id) {
   return request({
-    url: '/user/approveAgency',
-    method: 'post',
-    data
+    url: '/user/delete',
+    method: 'get',
+    params: { id }
   })
 }
 
@@ -37,6 +37,22 @@ export function listCollect(query) {
     url: '/collect/list',
     method: 'get',
     params: query
+  })
+}
+
+export function uploadFile(data) {
+  return request({
+    url: '/img/upload2',
+    method: 'post',
+    data
+  })
+}
+
+export function addOrUpdate(data) {
+  return request({
+    url: '/user/addOrUpdate',
+    method: 'post',
+    data
   })
 }
 

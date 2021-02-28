@@ -19,11 +19,11 @@ export function logout() {
   })
 }
 
-export function getAdminInfo(username) {
+export function getAdminInfo(adminId) {
   return request({
     url: '/admin/info',
     method: 'get',
-    params: { username }
+    params: { adminId }
   })
 }
 

@@ -6,12 +6,11 @@
       <el-input v-model="listQuery.userId" clearable class="filter-item" style="width: 200px;" placeholder="请输入用户ID"/>
       <el-input v-model="listQuery.name" clearable class="filter-item" style="width: 200px;" placeholder="请输入收货人名称"/>
       <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">查找</el-button>
-      <el-button :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">导出</el-button>
     </div>
 
-    <!-- 查询结果 -->
+<!--    <el-cascader :options="options" v-model="selectedOptions" @change="handleChange"></el-cascader>-->
     <el-table v-loading="listLoading" :data="list" size="small" element-loading-text="正在查询中。。。" border fit highlight-current-row>
-      <el-table-column align="center" width="100px" label="地址ID" prop="id" sortable/>
+      <el-table-column align="center" width="100px" label="地址ID" prop="addressId" sortable/>
 
       <el-table-column align="center" min-width="100px" label="用户ID" prop="userId"/>
 
@@ -21,7 +20,7 @@
 
       <el-table-column align="center" min-width="300px" label="地址" prop="address">
         <template slot-scope="scope">
-          {{ scope.row.province + scope.row.city + scope.row.area + scope.row.address }}
+          {{ scope.row.province +'/'+ scope.row.city +'/'+ scope.row.area +'/'+ scope.row.address }}
         </template>
       </el-table-column>
 
@@ -41,18 +40,21 @@
 <script>
 import { listAddress } from '@/api/user'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
+let pca = require("@/assets/pca-code.json")
 
 export default {
   name: 'UserAddress',
   components: { Pagination },
   data() {
     return {
+      options: pca,
+      selectedOptions: [],
       list: null,
       total: 0,
       listLoading: true,
       listQuery: {
-        page: 1,
-        limit: 20,
+        current: 1,
+        size: 20,
         name: undefined,
         userId: undefined,
         sort: 'add_time',
@@ -65,10 +67,14 @@ export default {
     this.getList()
   },
   methods: {
+    handleChange(value){
+      console.log(value)
+    },
     getList() {
       this.listLoading = true
       listAddress(this.listQuery).then(response => {
-        this.list = response.data.data.items
+        console.log('address',response)
+        this.list = response.data.data.records
         this.total = response.data.data.total
         this.listLoading = false
       }).catch(() => {

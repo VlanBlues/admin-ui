@@ -8,9 +8,33 @@ export function listGoods(query) {
   })
 }
 
+export function uploadFile(data) {
+  return request({
+    url: '/img/upload2',
+    method: 'post',
+    data
+  })
+}
+
+export function multipleUpload(data) {
+  return request({
+    url: '/img/multipleUpload',
+    method: 'post',
+    data
+  })
+}
+
 export function deleteGoods(data) {
   return request({
     url: '/goods/delete',
+    method: 'post',
+    data
+  })
+}
+
+export function addGoods(data) {
+  return request({
+    url: '/goods/add',
     method: 'post',
     data
   })
