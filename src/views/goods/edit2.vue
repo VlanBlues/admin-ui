@@ -364,11 +364,11 @@ export default {
   },
   methods: {
     init: function() {
-      if (this.$route.query.id == null) {
+      if (this.$route.query.goodsId == null) {
         return
       }
-
       const goodsId = this.$route.query.id
+      console.log(goodsId)
       detailGoods(goodsId).then(response => {
         this.goods = response.data.data.goods
         this.specifications = response.data.data.specifications

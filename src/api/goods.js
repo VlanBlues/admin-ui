@@ -50,9 +50,9 @@ export function publishGoods(data) {
 
 export function detailGoods(id) {
   return request({
-    url: '/goods/detail',
+    url: '/goods/getByGoodsId',
     method: 'get',
-    params: { id }
+    params: { goodsId:id }
   })
 }
 

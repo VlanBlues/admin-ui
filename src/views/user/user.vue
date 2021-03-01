@@ -357,8 +357,7 @@ export default {
     text-align: center;
   }
   .avatar {
-    width: 100px;
-    height: 100px;
+    width: 100%;
     display: block;
   }
 </style>

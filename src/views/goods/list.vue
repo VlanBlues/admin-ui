@@ -46,13 +46,13 @@
 
       <el-table-column align="center" label="操作" width="200" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">编辑</el-button>
+          <el-button type="primary" size="mini" @click="handleUpdate(scope.row.goodsId)">编辑</el-button>
           <el-button type="danger" size="mini" @click="handleDelete(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
 
-    <pagination v-show="total>0" :total="total" :page.sync="listQuery.current" :limit.sync="listQuery.limit" @pagination="getList" />
+    <pagination v-show="total>0" :total="total" :page.sync="listQuery.current" :limit.sync="listQuery.size" @pagination="getList" />
 
     <el-tooltip placement="top" content="返回顶部">
       <back-to-top :visibility-height="100" />
@@ -126,8 +126,8 @@ export default {
     handleCreate() {
       this.$router.push({ path: '/goods/create' })
     },
-    handleUpdate(row) {
-      this.$router.push({ path: '/goods/edit', query: { id: row.id }})
+    handleUpdate(id) {
+      this.$router.push({ path: '/goods/edit', query: { goodsId: id }})
     },
     handleDelete(row) {
       deleteGoods(row).then(response => {
