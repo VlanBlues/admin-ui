@@ -47,13 +47,14 @@
         </div>
       </el-col>
     </el-row>
+    <div id="useChart" style="width: 100%;height: 400px"></div>
   </div>
 </template>
 
 <script>
 import { info } from '@/api/dashboard'
 import CountTo from 'vue-count-to'
-
+import echarts from 'echarts';
 export default {
   components: {
     CountTo
@@ -67,20 +68,89 @@ export default {
     }
   },
   created() {
-    // info().then(response => {
-    //   this.userTotal = response.data.data.userTotal
-    //   this.goodsTotal = response.data.data.goodsTotal
-    //   this.productTotal = response.data.data.productTotal
-    //   this.orderTotal = response.data.data.orderTotal
-    // })
     this.userTotal = 424
     this.goodsTotal = 424
     this.productTotal = 424
     this.orderTotal = 424
   },
+  mounted() {
+    this.drawPie();
+  },
   methods: {
     handleSetLineChartData(type) {
       this.$emit('handleSetLineChartData', type)
+    },
+    drawPie(){
+      this.charts = echarts.init(document.getElementById('useChart'));
+      this.charts.setOption({
+        title: {
+          text: '近一周商城访问情况'
+        },
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+            type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+          }
+        },
+        legend: {
+          data: ['注册数量', '访问次数', '订单数量', '货物数量']
+        },
+        grid: {
+          left: '10%',
+          right: '8%',
+          bottom: '3%',
+          containLabel: true
+        },
+        xAxis: {
+          type: 'value'
+        },
+        yAxis: {
+          type: 'category',
+          data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+        },
+        series: [
+          {
+            name: '注册数量',
+            type: 'bar',
+            stack: '总量',
+            label: {
+              show: true,
+              position: 'insideRight'
+            },
+            data: [320, 302, 301, 334, 390, 330, 320]
+          },
+          {
+            name: '访问次数',
+            type: 'bar',
+            stack: '总量',
+            label: {
+              show: true,
+              position: 'insideRight'
+            },
+            data: [120, 132, 101, 134, 90, 230, 210]
+          },
+          {
+            name: '订单数量',
+            type: 'bar',
+            stack: '总量',
+            label: {
+              show: true,
+              position: 'insideRight'
+            },
+            data: [220, 182, 191, 234, 290, 330, 310]
+          },
+          {
+            name: '货物数量',
+            type: 'bar',
+            stack: '总量',
+            label: {
+              show: true,
+              position: 'insideRight'
+            },
+            data: [150, 212, 201, 154, 190, 330, 410]
+          }
+        ]
+      });
     }
   }
 }

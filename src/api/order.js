@@ -3,20 +3,17 @@ import Qs from 'qs'
 
 export function listOrder(query) {
   return request({
-    url: '/order/list',
+    url: '/order/listByUser',
     method: 'get',
     params: query,
-    paramsSerializer: function(params) {
-      return Qs.stringify(params, { arrayFormat: 'repeat' })
-    }
   })
 }
 
-export function detailOrder(id) {
+export function deletedOrder(data) {
   return request({
-    url: '/order/detail',
-    method: 'get',
-    params: { id }
+    url: '/order/delete',
+    method: 'post',
+    data
   })
 }
 

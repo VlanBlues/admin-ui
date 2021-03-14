@@ -15,7 +15,7 @@
 
       <el-table-column align="center" label="头像" prop="avatar" :size="50" width="100px">
         <template slot-scope="scope">
-          <el-avatar :src="scope.row.avatar"></el-avatar>
+          <el-avatar :src="scope.row.avatar" ></el-avatar>
         </template>
       </el-table-column>
 
@@ -33,11 +33,11 @@
 
       <el-table-column align="center" label="生日" prop="birthday"/>
 
-      <el-table-column align="center" label="注册时间" prop="addTime" sortable/>
+      <el-table-column align="center" label="注册时间" prop="addTime" sortable width="140px"/>
 
-      <el-table-column align="center" label="更新时间" prop="updateTime" sortable/>
+      <el-table-column align="center" label="更新时间" prop="updateTime" sortable width="140px"/>
 
-      <el-table-column align="center" label="最后登录时间" prop="lastLoginTime" sortable/>
+      <el-table-column align="center" label="最后登录时间" prop="lastLoginTime" sortable width="140px"/>
 
       <el-table-column align="center" label="状态" prop="deleted" width="100px">
         <template slot-scope="scope">
@@ -63,6 +63,7 @@
           <el-col :span="24">
             <el-form-item label="头像" prop="avatar" required>
               <el-upload
+                style="width: 50%"
                 class="avatar-uploader"
                 action=""
                 :show-file-list="false"

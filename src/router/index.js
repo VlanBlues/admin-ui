@@ -114,26 +114,6 @@ export const asyncRouterMap = [
           title: '会员收藏',
           noCache: true
         }
-      },
-      {
-        path: 'history',
-        component: () => import('@/views/user/history'),
-        name: 'history',
-        meta: {
-          perms: ['GET /admin/history/list'],
-          title: '搜索历史',
-          noCache: true
-        }
-      },
-      {
-        path: 'feedback',
-        component: () => import('@/views/user/feedback'),
-        name: 'feedback',
-        meta: {
-          perms: ['GET /admin/feedback/list'],
-          title: '意见反馈',
-          noCache: true
-        }
       }
     ]
   },
@@ -210,74 +190,6 @@ export const asyncRouterMap = [
         meta: {
           perms: ['GET /admin/comment/list', 'POST /admin/comment/delete'],
           title: '商品评论',
-          noCache: true
-        }
-      }
-    ]
-  },
-
-  {
-    path: '/sys',
-    component: Layout,
-    redirect: 'noredirect',
-    alwaysShow: true,
-    name: 'sysManage',
-    meta: {
-      title: '系统管理',
-      icon: 'chart'
-    },
-    children: [
-      {
-        path: 'admin',
-        component: () => import('@/views/sys/admin'),
-        name: 'admin',
-        meta: {
-          perms: ['GET /admin/admin/list', 'POST /admin/admin/create', 'POST /admin/admin/update', 'POST /admin/admin/delete'],
-          title: '管理员',
-          noCache: true
-        }
-      }
-    ]
-  },
-
-  {
-    path: '/stat',
-    component: Layout,
-    redirect: 'noredirect',
-    alwaysShow: true,
-    name: 'statManage',
-    meta: {
-      title: '统计',
-      icon: 'chart'
-    },
-    children: [
-      {
-        path: 'user',
-        component: () => import('@/views/stat/user'),
-        name: 'statUser',
-        meta: {
-          perms: ['GET /admin/stat/user'],
-          title: '用户统计',
-          noCache: true
-        }
-      },
-      {
-        path: 'order',
-        component: () => import('@/views/stat/order'),
-        name: 'statOrder',
-        meta: {
-          perms: ['GET /admin/stat/order'],
-          title: '订单统计',
-          noCache: true
-        }
-      },
-      {
-        path: 'goods',
-        component: () => import('@/views/stat/goods'),
-        name: 'statGoods',
-        meta: {
-          perms: ['GET /admin/stat/goods'],
-          title: '商品统计',
           noCache: true
         }
       }

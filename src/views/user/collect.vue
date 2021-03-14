@@ -4,30 +4,37 @@
     <!-- 查询和其他操作 -->
     <div class="filter-container">
       <el-input v-model="listQuery.userId" clearable class="filter-item" style="width: 200px;" placeholder="请输入用户ID"/>
-      <el-input v-model="listQuery.valueId" clearable class="filter-item" style="width: 200px;" placeholder="请输入商品ID"/>
+      <el-input v-model="listQuery.goodsSn" clearable class="filter-item" style="width: 200px;" placeholder="请输入商品ID"/>
       <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">查找</el-button>
-      <el-button :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">导出</el-button>
     </div>
 
     <!-- 查询结果 -->
     <el-table v-loading="listLoading" :data="list" size="small" element-loading-text="正在查询中。。。" border fit highlight-current-row>
-      <el-table-column align="center" width="100px" label="收藏ID" prop="id" sortable/>
+      <el-table-column align="center" width="100px" label="收藏ID" prop="collectionId" sortable/>
 
       <el-table-column align="center" min-width="100px" label="用户ID" prop="userId"/>
 
-      <el-table-column align="center" min-width="100px" label="商品ID" prop="valueId"/>
+      <el-table-column align="center" min-width="100px" label="商品Sn" prop="mallGoods.goodsSn"/>
+
+      <el-table-column align="center" min-width="100px" label="商品名称" prop="mallGoods.name"/>
+
+      <el-table-column align="center" property="iconUrl" label="图片">
+        <template slot-scope="scope">
+          <img :src="scope.row.mallGoods.picUrl" width="40">
+        </template>
+      </el-table-column>
 
       <el-table-column align="center" min-width="100px" label="添加时间" prop="addTime"/>
 
     </el-table>
 
-    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
+    <pagination v-show="total>0" :total="total" :current.sync="listQuery.current" :size.sync="listQuery.size" @pagination="getList" />
 
   </div>
 </template>
 
 <script>
-import { listCollect } from '@/api/user'
+import { listByUserId } from '@/api/collection'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
 export default {
@@ -39,10 +46,10 @@ export default {
       total: 0,
       listLoading: true,
       listQuery: {
-        page: 1,
-        limit: 20,
+        current: 1,
+        size: 20,
         userId: undefined,
-        valueId: undefined,
+        goodsSn: undefined,
         sort: 'add_time',
         order: 'desc'
       },
@@ -55,9 +62,10 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      listCollect(this.listQuery).then(response => {
-        this.list = response.data.data.items
-        this.total = response.data.data.total
+      listByUserId(this.listQuery).then(res => {
+        console.log('collection',res.data.data)
+        this.list = res.data.data.records
+        this.total = res.data.data.total
         this.listLoading = false
       }).catch(() => {
         this.list = []
@@ -66,7 +74,7 @@ export default {
       })
     },
     handleFilter() {
-      this.listQuery.page = 1
+      this.listQuery.current = 1
       this.getList()
     },
     resetForm() {
@@ -76,15 +84,6 @@ export default {
         valueId: '',
         addTime: undefined
       }
-    },
-    handleDownload() {
-      this.downloadLoading = true
-      import('@/vendor/Export2Excel').then(excel => {
-        const tHeader = ['用户ID', '商品ID', '添加时间']
-        const filterVal = ['userId', 'valueId', 'addTime']
-        excel.export_json_to_excel2(tHeader, this.list, filterVal, '用户收藏信息')
-        this.downloadLoading = false
-      })
     }
   }
 }

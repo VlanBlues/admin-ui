@@ -4,9 +4,8 @@
     <!-- 查询和其他操作 -->
     <div class="filter-container">
       <el-input v-model="listQuery.userId" clearable class="filter-item" style="width: 200px;" placeholder="请输入用户ID"/>
-      <el-input v-model="listQuery.valueId" clearable class="filter-item" style="width: 200px;" placeholder="请输入商品ID"/>
+      <el-input v-model="listQuery.goodsSn" clearable class="filter-item" style="width: 200px;" placeholder="请输入商品Sn"/>
       <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">查找</el-button>
-      <el-button :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">导出</el-button>
     </div>
 
     <!-- 查询结果 -->
@@ -14,29 +13,34 @@
 
       <el-table-column align="center" label="用户ID" prop="userId"/>
 
-      <el-table-column align="center" label="商品ID" prop="valueId"/>
+      <el-table-column align="center" label="商品Sn" prop="goodsSn"/>
+
+      <el-table-column align="center" label="用户名">
+        <template slot-scope="scope">
+          <span>{{ scope.row.user.username }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column align="center" label="商品名称">
+        <template slot-scope="scope">
+          <span>{{ scope.row.goods.name }}</span>
+        </template>
+      </el-table-column>
 
       <el-table-column align="center" label="打分" prop="star"/>
 
       <el-table-column align="center" label="评论内容" prop="content"/>
 
-      <el-table-column align="center" label="评论图片" prop="picUrls">
-        <template slot-scope="scope">
-          <img v-for="item in scope.row.picUrls" :key="item" :src="item" width="40">
-        </template>
-      </el-table-column>
-
       <el-table-column align="center" label="时间" prop="addTime"/>
 
       <el-table-column align="center" label="操作" width="200" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button type="primary" size="mini" @click="handleReply(scope.row)">回复</el-button>
           <el-button type="danger" size="mini" @click="handleDelete(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
 
-    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
+    <pagination v-show="total>0" :total="total" :page.sync="listQuery.current" :limit.sync="listQuery.size" @pagination="getList" />
 
     <!-- 评论回复 -->
     <el-dialog :visible.sync="replyFormVisible" title="回复">
@@ -68,10 +72,10 @@ export default {
       total: 0,
       listLoading: true,
       listQuery: {
-        page: 1,
-        limit: 20,
+        current: 1,
+        size: 20,
         userId: undefined,
-        valueId: undefined,
+        goodsSn: undefined,
         sort: 'add_time',
         order: 'desc'
       },
@@ -89,9 +93,10 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      listComment(this.listQuery).then(response => {
-        this.list = response.data.data.items
-        this.total = response.data.data.total
+      listComment(this.listQuery).then(res => {
+        console.log('comment',res.data.data)
+        this.list = res.data.data.records
+        this.total = res.data.data.total
         this.listLoading = false
       }).catch(() => {
         this.list = []
@@ -100,12 +105,8 @@ export default {
       })
     },
     handleFilter() {
-      this.listQuery.page = 1
+      this.listQuery.current = 1
       this.getList()
-    },
-    handleReply(row) {
-      this.replyForm = { commentId: row.id, content: '' }
-      this.replyFormVisible = true
     },
     reply() {
       replyComment(this.replyForm).then(response => {
@@ -122,16 +123,29 @@ export default {
       })
     },
     handleDelete(row) {
-      deleteComment(row).then(response => {
-        this.$notify({
-          title: '成功',
-          message: '删除成功',
-          type: 'success',
-          duration: 2000
+      this.$confirm(`是否删除编号为${row.goodsSn}的商品？`, '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        deleteComment({
+          commentId:row.commentId
+        }).then(response => {
+          this.$notify({
+            title: '成功',
+            message: '删除成功',
+            type: 'success',
+            duration: 2000
+          })
+          const index = this.list.indexOf(row)
+          this.list.splice(index, 1)
         })
-        const index = this.list.indexOf(row)
-        this.list.splice(index, 1)
-      })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        });
+      });
     },
     handleDownload() {
       this.downloadLoading = true
